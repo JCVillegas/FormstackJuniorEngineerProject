@@ -15,19 +15,20 @@ class ControllerDocument
 
     /**
      * @ Class constructor.
-     * @param  ModelDocument    $model
-     * @param  ViewUserHeader   $viewHeader
-     * @param  ViewUserFooter   $viewFooter
-     * @param  ViewDocumentList $viewDocumentList
+     * @param  ModelDocument      $model
+     * @param  ViewDocumentHeader $viewHeader
+     * @param  ViewDocumentFooter $viewFooter
+     * @param  ViewDocumentList   $viewDocumentList
+     * @param  ViewDocumentEdit   $viewDocumentEdit
      */
     public function __construct(
-        ModelDocument    $model,
-        ViewUserHeader   $viewHeader,
-        ViewUserFooter   $viewFooter,
-        ViewDocumentList $viewDocumentList,
-        ViewDocumentEdit $viewDocumentEdit
+        ModelDocument      $model,
+        ViewDocumentHeader $viewHeader,
+        ViewDocumentFooter $viewFooter,
+        ViewDocumentList   $viewDocumentList,
+        ViewDocumentEdit   $viewDocumentEdit
     ) {
-        $this->model      =  $model;
+        $this->model      = $model;
         $this->viewHeader = $viewHeader;
         $this->viewFooter = $viewFooter;
         $this->viewList   = $viewDocumentList;
