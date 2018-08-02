@@ -44,11 +44,11 @@ class ViewDocumentList
             $tableList .= '<td>'.htmlentities($value['created']).'</td>';
             $tableList .= '<td>'.htmlentities($value['updated']).'</td>';
             $tableList .= '<td>'.htmlentities($value['exported']).'</td>';
-            $tableList .= '<td><a href="index.php?operation=UpdateDocument&id='.
+            $tableList .= '<td><a href="index.php?operation=updateDocument&id='.
                 urlencode($value['id']).'">update</a></td>';
-            $tableList .= '<td><a href="index.php?operation=ExportDocument&id='.
+            $tableList .= '<td><a href="index.php?operation=exportDocument&id='.
                 urlencode($value['id']).'">export</a></td>';
-            $tableList .= '<td><a href="index.php?operation=ConfirmDeleteDocument&id='.urlencode($value['id']).'">';
+            $tableList .= '<td><a href="index.php?operation=confirmDeleteDocument&id='.urlencode($value['id']).'">';
             $tableList .= 'delete document</a>';
             $tableList .= '</td>';
             $tableList .= '</tr>';
