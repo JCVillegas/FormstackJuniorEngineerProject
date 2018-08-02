@@ -44,21 +44,21 @@ class ViewDocumentList
             $tableList .= '<td>'.htmlentities($value['created']).'</td>';
             $tableList .= '<td>'.htmlentities($value['updated']).'</td>';
             $tableList .= '<td>'.htmlentities($value['exported']).'</td>';
-            $tableList .= '<td><a href="index.php?operation=UpdatePassword&id='.
+            $tableList .= '<td><a href="index.php?operation=UpdateDocument&id='.
                 urlencode($value['id']).'">update</a></td>';
-            $tableList .= '<td><a href="index.php?operation=UpdateUser&id='.
-                urlencode($value['id']).'">edit</a></td>';
-            $tableList .= '<td><a href="index.php?operation=ConfirmDeleteUser&id='.urlencode($value['id']).'">';
-            $tableList .= 'delete user</a>';
+            $tableList .= '<td><a href="index.php?operation=ExportDocument&id='.
+                urlencode($value['id']).'">export</a></td>';
+            $tableList .= '<td><a href="index.php?operation=ConfirmDeleteDocument&id='.urlencode($value['id']).'">';
+            $tableList .= 'delete document</a>';
             $tableList .= '</td>';
             $tableList .= '</tr>';
         }
         $tableList .= '</table>';
         $this->viewHeader->show();
+        echo  "<a href='index.php?operation=createDocument'>Create new Document</a><br><br>";
         if (empty($list)) {
             echo 'No data yet.';
         } else {
-            echo  "<a href='index.php?operation=createDocument'>Create new Document</a><br><br>";
             echo $tableList;
         }
         $this->viewFooter->show();
