@@ -36,11 +36,19 @@ class ControllerDocument
     }
 
     /**
-     *  @ View a list of  all documents.
+     *  @ View list of  all documents.
      */
     public function readDocuments()
     {
         $list = $this->model->getAllDocuments();
         $this->viewList->show($list);
+    }
+
+    /**
+     *  @ View form that creates a document.
+     */
+    public function createDocument()
+    {
+        $this->viewEdit->show();
     }
 }
