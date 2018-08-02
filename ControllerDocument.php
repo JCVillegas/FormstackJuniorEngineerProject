@@ -15,24 +15,27 @@ class ControllerDocument
 
     /**
      * @ Class constructor.
-     * @param  ModelDocument      $model
-     * @param  ViewDocumentHeader $viewHeader
-     * @param  ViewDocumentFooter $viewFooter
-     * @param  ViewDocumentList   $viewDocumentList
-     * @param  ViewDocumentEdit   $viewDocumentEdit
+     * @param  ModelDocument       $model
+     * @param  ViewDocumentHeader  $viewHeader
+     * @param  ViewDocumentFooter  $viewFooter
+     * @param  ViewDocumentList    $viewDocumentList
+     * @param  ViewDocumentEdit    $viewDocumentEdit
+     * @param  ViewDocumentMessage $viewDocumentMessage
      */
     public function __construct(
-        ModelDocument      $model,
-        ViewDocumentHeader $viewHeader,
-        ViewDocumentFooter $viewFooter,
-        ViewDocumentList   $viewDocumentList,
-        ViewDocumentEdit   $viewDocumentEdit
+        ModelDocument       $model,
+        ViewDocumentHeader  $viewHeader,
+        ViewDocumentFooter  $viewFooter,
+        ViewDocumentList    $viewDocumentList,
+        ViewDocumentEdit    $viewDocumentEdit,
+        ViewDocumentMessage $viewDocumentMessage
     ) {
-        $this->model      = $model;
-        $this->viewHeader = $viewHeader;
-        $this->viewFooter = $viewFooter;
-        $this->viewList   = $viewDocumentList;
-        $this->viewEdit   = $viewDocumentEdit;
+        $this->model       = $model;
+        $this->viewHeader  = $viewHeader;
+        $this->viewFooter  = $viewFooter;
+        $this->viewList    = $viewDocumentList;
+        $this->viewEdit    = $viewDocumentEdit;
+        $this->viewMessage = $viewDocumentMessage;
     }
 
     /**
@@ -51,4 +54,31 @@ class ControllerDocument
     {
         $this->viewEdit->show();
     }
+
+    /**
+     *  @ Update or create document.
+     */
+    public function saveDocument()
+    {
+        $updateForm=!empty($_POST['updateForm']);
+        $message = '';
+
+        try {
+            $result = $this->model->saveDocument($_POST);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+        }
+
+        if (empty($message)) {
+            $this->viewMessage->show('The document has been saved.');
+        } else {
+            $error = 'There was an error: '.$message;
+            $this->viewEdit->show($_POST, $error, $updateForm);
+        }
+
+
+
+
+    }
+
 }
