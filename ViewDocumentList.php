@@ -57,7 +57,7 @@ class ViewDocumentList
         $this->viewHeader->show();
         echo  "<a href='index.php?operation=createDocument'>Create new Document</a><br><br>";
         if (empty($list)) {
-            echo 'No data yet.';
+            echo 'No documents yet. :(';
         } else {
             echo $tableList;
         }

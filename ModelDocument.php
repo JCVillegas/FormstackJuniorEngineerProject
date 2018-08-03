@@ -18,6 +18,25 @@ class ModelDocument
     }
 
     /**
+     * Delete document with specific id
+     * @param  int   $documentId
+     * @return array $result
+     * @throws \Exception
+     */
+    public function deleteDocument($documentId)
+    {
+        $documentId['id'] = !empty($documentId['id']) ? (int) $documentId['id'] : 0;
+        if ($documentId['id'] == 0) {
+            throw new \Exception('Incorrect document id.');
+        }
+        $this->database->query('DELETE FROM '.DatabaseConfig::DB_TABLE.' WHERE id=:id');
+        $this->database->bind(':id', $documentId['id'], \PDO::PARAM_INT);
+        $result = $this->database->execute();
+
+        return $result;
+    }
+
+    /**
      * Get a list of all documents
      */
     public function getAllDocuments()
@@ -47,7 +66,6 @@ class ModelDocument
             return $row[0];
         }
     }
-
 
     /**
      * Creates or update documents

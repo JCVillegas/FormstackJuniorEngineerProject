@@ -8,38 +8,80 @@ namespace JCVillegas\JuniorProject;
 class ControllerDocument
 {
     private $model;
-    private $viewHeader;
-    private $viewFooter;
-    private $viewList;
     private $viewEdit;
+    private $viewDelete;
+    private $viewFooter;
+    private $viewHeader;
+    private $viewList;
+    private $viewMessage;
 
     /**
      * Class constructor.
      * @param  ModelDocument       $model
-     * @param  ViewDocumentHeader  $viewHeader
-     * @param  ViewDocumentFooter  $viewFooter
-     * @param  ViewDocumentList    $viewDocumentList
      * @param  ViewDocumentEdit    $viewDocumentEdit
+     * @param  ViewDocumentDelete  $viewDocumentDelete
+     * @param  ViewDocumentHeader  $viewHeader
+     * @param  ViewDocumentList    $viewDocumentList
+     * @param  ViewDocumentFooter  $viewFooter
      * @param  ViewDocumentMessage $viewDocumentMessage
      */
     public function __construct(
         ModelDocument       $model,
-        ViewDocumentHeader  $viewHeader,
-        ViewDocumentFooter  $viewFooter,
-        ViewDocumentList    $viewDocumentList,
         ViewDocumentEdit    $viewDocumentEdit,
+        ViewDocumentDelete  $viewDocumentDelete,
+        ViewDocumentFooter  $viewFooter,
+        ViewDocumentHeader  $viewHeader,
+        ViewDocumentList    $viewDocumentList,
         ViewDocumentMessage $viewDocumentMessage
     ) {
         $this->model       = $model;
-        $this->viewHeader  = $viewHeader;
-        $this->viewFooter  = $viewFooter;
-        $this->viewList    = $viewDocumentList;
         $this->viewEdit    = $viewDocumentEdit;
+        $this->viewDelete  = $viewDocumentDelete;
+        $this->viewHeader  = $viewHeader;
+        $this->viewList    = $viewDocumentList;
+        $this->viewFooter  = $viewFooter;
         $this->viewMessage = $viewDocumentMessage;
     }
 
     /**
-     *  View list of  all documents.
+     *  @ View confirm message to delete document.
+     */
+    public function confirmDeleteDocument()
+    {
+        $this->viewDelete->show($_GET);
+    }
+
+
+    /**
+     * View form that creates a document.
+     */
+    public function createDocument()
+    {
+        $this->viewEdit->show();
+    }
+
+    /**
+     * Delete document.
+     */
+    public function deleteDocument()
+    {
+        $message = '';
+
+        try {
+            $documentToDelete = $this->model->deleteDocument($_GET);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+        }
+
+        if (empty($message)) {
+            $this->viewMessage->show('The document has been deleted.');
+        } else {
+            $this->viewMessage->show('There was an error: '.$message);
+        }
+    }
+
+    /**
+     * View list of  all documents.
      */
     public function readDocuments()
     {
@@ -48,15 +90,7 @@ class ControllerDocument
     }
 
     /**
-     *  View form that creates a document.
-     */
-    public function createDocument()
-    {
-        $this->viewEdit->show();
-    }
-
-    /**
-     *  Creates or updates a document.
+     * Creates or updates a document.
      */
     public function saveDocument()
     {

@@ -10,21 +10,25 @@ require_once 'ViewDocumentFooter.php';
 require_once 'ViewDocumentList.php';
 require_once 'ViewDocumentEdit.php';
 require_once 'ViewDocumentMessage.php';
+require_once 'ViewDeleteDocument.php';
 
 $databaseConnection = new JCVillegas\JuniorProject\DatabaseConnection();
 $model              = new JCVillegas\JuniorProject\ModelDocument($databaseConnection);
-$viewHeader         = new JCVillegas\JuniorProject\ViewDocumentHeader();
+
 $viewFooter         = new JCVillegas\JuniorProject\ViewDocumentFooter();
-$viewMessage        = new JCVillegas\JuniorProject\ViewDocumentMessage($viewHeader, $viewFooter);
-$viewList           = new JCVillegas\JuniorProject\ViewDocumentList($viewHeader, $viewFooter);
+$viewHeader         = new JCVillegas\JuniorProject\ViewDocumentHeader();
 $viewEdit           = new JCVillegas\JuniorProject\ViewDocumentEdit($viewHeader, $viewFooter);
+$viewDelete         = new JCVillegas\JuniorProject\ViewDocumentDelete($viewHeader, $viewFooter);
+$viewList           = new JCVillegas\JuniorProject\ViewDocumentList($viewHeader, $viewFooter);
+$viewMessage        = new JCVillegas\JuniorProject\ViewDocumentMessage($viewHeader, $viewFooter);
 
 $controller = new JCVillegas\JuniorProject\ControllerDocument(
     $model,
-    $viewHeader,
-    $viewFooter,
-    $viewList,
     $viewEdit,
+    $viewDelete,
+    $viewFooter,
+    $viewHeader,
+    $viewList,
     $viewMessage
 );
 
