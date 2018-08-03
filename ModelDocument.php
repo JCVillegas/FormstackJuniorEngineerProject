@@ -28,37 +28,73 @@ class ModelDocument
     }
 
     /**
+     * Select document data with specific id
+     * @param  int $documentId
+     * @return false if empty or array if true
+     */
+    public function getDocument($documentId)
+    {
+        $documentId['id'] = !empty($documentId['id']) ? (int) $documentId['id'] : 0;
+        if ($documentId['id'] == 0) {
+            return false;
+        }
+        $this->database->query('SELECT * FROM  '.DatabaseConfig::DB_TABLE.' WHERE id=:id');
+        $this->database->bind(':id', $documentId['id'], \PDO::PARAM_INT);
+        $row = $this->database->resultset();
+        if (empty($row)) {
+            return false;
+        } else {
+            return $row[0];
+        }
+    }
+
+
+    /**
      * Creates or update documents
-     * @param  array $userData
+     * @param  array $documentData
      * @return array $result
      * @throws \Exception
      */
-    public function saveDocument($userData)
+    public function saveDocument($documentData)
     {
+        $documentData['documentName'] = !empty($documentData['documentName']) ? trim(substr($documentData['documentName'], 0, 100)) : '';
 
-
-        $userData['documentName'] = !empty($userData['documentName']) ? trim(substr($userData['documentName'], 0, 100)) : '';
-
-        foreach (array_combine($userData['key'], $userData['value'])  as $key => $value) {
+        foreach (array_combine($documentData['key'], $documentData['value'])  as $key => $value) {
             $checkKey   = !empty($key) ? trim(substr($key, 0, 100)) : '';
             $checkValue = !empty($value) ? trim(substr($value, 0, 100)) : '';
 
-            if ($checkKey == '' || $checkValue == '' || $userData['documentName'] == '') {
+            if ($checkKey == '' || $checkValue == '' || $documentData['documentName'] == '') {
                 throw new \Exception('Incomplete document data.');
             }
         }
 
-        $jsonKeyValue = json_encode(array_combine($userData['key'], $userData['value']));
-        $this->database->query('INSERT INTO  '.DatabaseConfig::DB_TABLE.' (name, keyvalues, created, updated, exported) 
+        $jsonKeyValue = json_encode(array_combine($documentData['key'], $documentData['value']));
+
+        if (empty($documentData['id'])) {
+            $this->database->query('INSERT INTO  ' . DatabaseConfig::DB_TABLE . ' (name, keyvalues, created, updated, exported) 
                   VALUES (:name, :keyvalues, :created, :updated, :exported)');
 
-        $this->database->bind(':name', $userData['documentName'], \PDO::PARAM_STR);
-        $this->database->bind(':keyvalues', $jsonKeyValue, \PDO::PARAM_STR);
-        $this->database->bind(':created', date('Y-m-d H:i:s'), \PDO::PARAM_STR);
-        $this->database->bind(':updated', '0000-00-00 00:00:00', \PDO::PARAM_STR);
-        $this->database->bind(':exported', '0000-00-00 00:00:00', \PDO::PARAM_STR);
+            $this->database->bind(':name', $documentData['documentName'], \PDO::PARAM_STR);
+            $this->database->bind(':keyvalues', $jsonKeyValue, \PDO::PARAM_STR);
+            $this->database->bind(':created', date('Y-m-d H:i:s'), \PDO::PARAM_STR);
+            $this->database->bind(':updated', '0000-00-00 00:00:00', \PDO::PARAM_STR);
+            $this->database->bind(':exported', '0000-00-00 00:00:00', \PDO::PARAM_STR);
 
-        $result = $this->database->execute();
-        return $result;
+            $result = $this->database->execute();
+            return $result;
+        }
+        else {
+            $this->database->query('UPDATE '.DatabaseConfig::DB_TABLE.' SET name=:name, keyvalues=:keyvalues,
+                  created=:created, updated=:updated, exported=:exported WHERE id=:id');
+            $this->database->bind(':id', $documentData['id'], \PDO::PARAM_INT);
+            $this->database->bind(':name', $documentData['documentName'], \PDO::PARAM_STR);
+            $this->database->bind(':keyvalues', $jsonKeyValue, \PDO::PARAM_STR);
+            $this->database->bind(':created', $documentData['created'], \PDO::PARAM_STR);
+            $this->database->bind(':updated', date('Y-m-d H:i:s'), \PDO::PARAM_STR);
+            $this->database->bind(':exported', $documentData['exported'], \PDO::PARAM_STR);
+
+            $result = $this->database->execute();
+            return $result;
+        }
     }
 }
