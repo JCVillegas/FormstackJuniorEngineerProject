@@ -1,5 +1,4 @@
 <?php
-
 error_reporting(E_ALL);
 
 require_once 'DatabaseConfig.php';
@@ -11,9 +10,6 @@ require_once 'ViewDocumentFooter.php';
 require_once 'ViewDocumentList.php';
 require_once 'ViewDocumentEdit.php';
 require_once 'ViewDocumentMessage.php';
-
-
-
 
 $databaseConnection = new JCVillegas\JuniorProject\DatabaseConnection();
 $model              = new JCVillegas\JuniorProject\ModelDocument($databaseConnection);
