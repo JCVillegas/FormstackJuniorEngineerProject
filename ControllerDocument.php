@@ -3,7 +3,7 @@
 namespace JCVillegas\JuniorProject;
 
 /**
- *   @ Document controller class
+ * Document controller class
  */
 class ControllerDocument
 {
@@ -14,7 +14,7 @@ class ControllerDocument
     private $viewEdit;
 
     /**
-     * @ Class constructor.
+     * Class constructor.
      * @param  ModelDocument       $model
      * @param  ViewDocumentHeader  $viewHeader
      * @param  ViewDocumentFooter  $viewFooter
@@ -39,7 +39,7 @@ class ControllerDocument
     }
 
     /**
-     *  @ View list of  all documents.
+     *  View list of  all documents.
      */
     public function readDocuments()
     {
@@ -48,7 +48,7 @@ class ControllerDocument
     }
 
     /**
-     *  @ View form that creates a document.
+     *  View form that creates a document.
      */
     public function createDocument()
     {
@@ -56,12 +56,12 @@ class ControllerDocument
     }
 
     /**
-     *  @ Update or create document.
+     *  Creates or updates a document.
      */
     public function saveDocument()
     {
-        $updateForm=!empty($_POST['updateForm']);
-        $message = '';
+        $updateForm = !empty($_POST['updateForm']);
+        $message    = '';
 
         try {
             $result = $this->model->saveDocument($_POST);
@@ -75,10 +75,19 @@ class ControllerDocument
             $error = 'There was an error: '.$message;
             $this->viewEdit->show($_POST, $error, $updateForm);
         }
-
-
-
-
     }
 
+    /**
+     * Update document data.
+     */
+        public function updateDocument()
+    {
+        $documentData = $this->model->getDocument($_GET);
+
+        if ($documentData) {
+            $this->viewEdit->show($documentData, '', true);
+        } else {
+            $this->viewMessage->show('There was an error.');
+        }
+    }
 }
