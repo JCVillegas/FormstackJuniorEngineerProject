@@ -9,6 +9,7 @@ class ControllerDocument
 {
     private $model;
     private $viewEdit;
+    private $viewExport;
     private $viewDelete;
     private $viewFooter;
     private $viewHeader;
@@ -19,6 +20,7 @@ class ControllerDocument
      * Class constructor.
      * @param  ModelDocument       $model
      * @param  ViewDocumentEdit    $viewDocumentEdit
+     * @param  ViewDocumentExport  $viewDocumentExport
      * @param  ViewDocumentDelete  $viewDocumentDelete
      * @param  ViewDocumentHeader  $viewHeader
      * @param  ViewDocumentList    $viewDocumentList
@@ -28,6 +30,7 @@ class ControllerDocument
     public function __construct(
         ModelDocument       $model,
         ViewDocumentEdit    $viewDocumentEdit,
+        ViewDocumentExport  $viewDocumentExport,
         ViewDocumentDelete  $viewDocumentDelete,
         ViewDocumentFooter  $viewFooter,
         ViewDocumentHeader  $viewHeader,
@@ -36,6 +39,7 @@ class ControllerDocument
     ) {
         $this->model       = $model;
         $this->viewEdit    = $viewDocumentEdit;
+        $this->viewExport  = $viewDocumentExport;
         $this->viewDelete  = $viewDocumentDelete;
         $this->viewHeader  = $viewHeader;
         $this->viewList    = $viewDocumentList;
@@ -50,7 +54,6 @@ class ControllerDocument
     {
         $this->viewDelete->show($_GET);
     }
-
 
     /**
      * View form that creates a document.
@@ -77,6 +80,20 @@ class ControllerDocument
             $this->viewMessage->show('The document has been deleted.');
         } else {
             $this->viewMessage->show('There was an error: '.$message);
+        }
+    }
+
+    /**
+     * Exports a document.
+     */
+    public function exportDocument()
+    {
+        $documentData = $this->model->getDocument($_GET);
+
+        if ($documentData) {
+            $this->viewExport->exportDocument($documentData);
+        } else {
+            $this->viewMessage->show('There was an error.');
         }
     }
 

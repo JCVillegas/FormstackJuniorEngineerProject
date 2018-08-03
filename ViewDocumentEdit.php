@@ -27,7 +27,6 @@ class ViewDocumentEdit
         $documentName = !empty($documentData['name']) ? trim(substr($documentData['name'], 0, 100)) : '';
         $created      = !empty($documentData['created']) ? trim(substr($documentData['created'], 0, 100)) : '';
         $exported     = !empty($documentData['exported']) ? trim(substr($documentData['exported'], 0, 100)) : '';
-        $keyValues    = json_decode($documentData['keyvalues'], true);
 
         $createDocumentForm = "<form action='index.php?operation=saveDocument' method='post'>";
         $createDocumentForm.= "<table class='table table-bordered' id='dynamic_field'>";
@@ -36,6 +35,7 @@ class ViewDocumentEdit
         $createDocumentForm.= "</tr>";
 
         if ($update) {
+            $keyValues           = json_decode($documentData['keyvalues'], true);
             $createDocumentForm .= "<input type='hidden' name='updateForm' value='1'> <br>";
             $createDocumentForm .= "<input type='hidden' name='id' value='" . htmlentities($id) . "'> <br>";
             $createDocumentForm .= "<input type='hidden' name='created' value='" . htmlentities($created) . "'> <br>";

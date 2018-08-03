@@ -9,6 +9,7 @@ require_once 'ViewDocumentHeader.php';
 require_once 'ViewDocumentFooter.php';
 require_once 'ViewDocumentList.php';
 require_once 'ViewDocumentEdit.php';
+require_once 'ViewDocumentExport.php';
 require_once 'ViewDocumentMessage.php';
 require_once 'ViewDeleteDocument.php';
 
@@ -18,6 +19,7 @@ $model              = new JCVillegas\JuniorProject\ModelDocument($databaseConnec
 $viewFooter         = new JCVillegas\JuniorProject\ViewDocumentFooter();
 $viewHeader         = new JCVillegas\JuniorProject\ViewDocumentHeader();
 $viewEdit           = new JCVillegas\JuniorProject\ViewDocumentEdit($viewHeader, $viewFooter);
+$viewExport         = new JCVillegas\JuniorProject\ViewDocumentExport();
 $viewDelete         = new JCVillegas\JuniorProject\ViewDocumentDelete($viewHeader, $viewFooter);
 $viewList           = new JCVillegas\JuniorProject\ViewDocumentList($viewHeader, $viewFooter);
 $viewMessage        = new JCVillegas\JuniorProject\ViewDocumentMessage($viewHeader, $viewFooter);
@@ -25,6 +27,7 @@ $viewMessage        = new JCVillegas\JuniorProject\ViewDocumentMessage($viewHead
 $controller = new JCVillegas\JuniorProject\ControllerDocument(
     $model,
     $viewEdit,
+    $viewExport,
     $viewDelete,
     $viewFooter,
     $viewHeader,

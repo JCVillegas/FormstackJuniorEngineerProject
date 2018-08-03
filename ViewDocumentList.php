@@ -35,7 +35,6 @@ class ViewDocumentList
         $tableList .= '<td>Date Exported</td>';
         $tableList .= '<td>Update Document </td>';
         $tableList .= '<td>Export Document </td>';
-        $tableList .= '<td>Edit Document </td>';
         $tableList .= '<td>Delete Document </td>';
         $tableList .= '</tr>';
         foreach ($list as $key => $value) {
