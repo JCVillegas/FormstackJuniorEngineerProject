@@ -34,6 +34,7 @@ class ViewDocumentList
         $tableList .= '<td>Date Updated</td>';
         $tableList .= '<td>Date Exported</td>';
         $tableList .= '<td>Update Document </td>';
+        $tableList .= '<td>Download Document </td>';
         $tableList .= '<td>Export Document </td>';
         $tableList .= '<td>Delete Document </td>';
         $tableList .= '</tr>';
@@ -46,7 +47,9 @@ class ViewDocumentList
             $tableList .= '<td><a href="index.php?operation=updateDocument&id='.
                 urlencode($value['id']).'">update</a></td>';
             $tableList .= '<td><a href="index.php?operation=exportDocument&id='.
-                urlencode($value['id']).'">export</a></td>';
+                urlencode($value['id']).'">download</a></td>';
+            $tableList .= '<td><a href="index.php?operation=getToken&id='.
+                urlencode($value['id']).'">export to dropbox</a></td>';
             $tableList .= '<td><a href="index.php?operation=confirmDeleteDocument&id='.urlencode($value['id']).'">';
             $tableList .= 'delete document</a>';
             $tableList .= '</td>';
