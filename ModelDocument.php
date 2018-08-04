@@ -115,4 +115,25 @@ class ModelDocument
             return $result;
         }
     }
+
+    /**
+     * Update exports(download) document date
+     * @param  int  $Id
+     * @return bool $result
+     * @throws \Exception
+     */
+    public function updateExportDocument($Id)
+    {
+        $documentId = !empty($Id) ? (int) $Id : 0;
+        if ($documentId == 0) {
+            return false;
+        } else {
+            $this->database->query('UPDATE '.DatabaseConfig::DB_TABLE.' SET exported=:exported WHERE id=:id');
+            $this->database->bind(':id', $documentId, \PDO::PARAM_INT);
+            $this->database->bind(':exported', date('Y-m-d H:i:s'), \PDO::PARAM_STR);
+
+            $result = $this->database->execute();
+            return $result;
+        }
+    }
 }

@@ -92,6 +92,7 @@ class ControllerDocument
 
         if ($documentData) {
             $this->viewExport->exportDocument($documentData);
+            $this->model->updateExportDocument($documentData['id']);
         } else {
             $this->viewMessage->show('There was an error.');
         }
@@ -164,7 +165,7 @@ class ControllerDocument
         }
 
         if (empty($message)) {
-            $this->viewMessage->show('The document has been saved.');
+            $this->viewMessage->show('The document data has been saved.');
         } else {
             $error = 'There was an error: '.$message;
             $this->viewEdit->show($_POST, $error, $updateForm);
