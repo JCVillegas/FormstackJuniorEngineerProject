@@ -84,7 +84,7 @@ class ControllerDocument
     }
 
     /**
-     * Exports a document.
+     * Creates and downloads a csv document.
      */
     public function exportDocument()
     {
@@ -95,6 +95,49 @@ class ControllerDocument
         } else {
             $this->viewMessage->show('There was an error.');
         }
+    }
+
+    /**
+     * Export csv document to DropBox.
+     */
+    public function exportDocumentDropBox()
+    {
+
+        if (empty($_POST['documentToken'])) {
+            $this->viewMessage->show('Token cannot be empty.');
+        }
+        else {
+            $documentData                  = $this->model->getDocument($_POST);
+            $documentData['documentToken'] = $_POST['documentToken'];
+
+            $message = '';
+
+            if ($documentData) {
+
+                try {
+                    $this->viewExport->exportDocumentDropBox($documentData);
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+                }
+
+                if (empty($message)) {
+                    $this->viewMessage->show('The document has been uploaded.');
+                } else {
+                    $this->viewMessage->show('There was an error: '.$message);
+                }
+
+            } else {
+                $this->viewMessage->show('There was an error.');
+            }
+        }
+    }
+
+    /**
+     * View form that asks for  the DropBox token.
+     */
+    public function getToken()
+    {
+        $this->viewExport->showToken();
     }
 
     /**
