@@ -101,7 +101,7 @@ class ViewDocumentExport
         $showUrlForm.= "<td>File URL</td>";
         $showUrlForm.= "</tr>";
         $showUrlForm.= "<tr>";
-        $showUrlForm.= "<td>". $url . "</td>";
+        $showUrlForm.= "<td><a href='". $url . "'>". $url . "</td>";
         $showUrlForm.= "</tr>";
         $showUrlForm.= "<tr>";
         $showUrlForm.= "<td><br><a href='index.php?operation=readDocuments'>Go back to list documents</a></td>";
