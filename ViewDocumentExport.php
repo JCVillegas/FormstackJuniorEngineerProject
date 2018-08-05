@@ -6,6 +6,8 @@ class ViewDocumentExport
     private $viewHeader;
     private $viewFooter;
 
+    const TESTTOKEN ='o3YcmXH5SfsAAAAAAAALdCPLhiDc1yJGFmceFm9CD16pQ-Z3WPtJEJrxqi6-oXYw' ;
+
     /**
      *  Constructor
      * @param ViewDocumentHeader $viewHeader view of the header
@@ -47,17 +49,75 @@ class ViewDocumentExport
             fputcsv($fp, $line, ',');
         }
         fclose($fp);
-
-        //todo update  exported date.
     }
 
     /**
-     * Exports document to DropBox with specific id
-     * and returns URL.
+     * Exports document to DropBox with specific id and returns URL.
      * @param  array $documentData
+     * @return array
      * @throws \Exception
      */
     function exportDocumentDropBox ($documentData)
+    {
+        $documentName  = $this->uploadExportFile($documentData);
+        $documentToken = $documentData['documentToken'];
+        $publicUrl     = $this->getDropBoxUrl($documentName, $documentToken);
+        $this->showUrl($publicUrl);
+        return  array ($publicUrl,$documentData['id']);
+    }
+
+    /**
+     * View form for token input.
+     */
+    function showToken()
+    {
+        $id               = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
+        $createExportForm = "A token is needed. ";
+        $createExportForm.= "You can use the one already provided for testing purposes.<br>";
+        $createExportForm.= "<form action='index.php?operation=exportDocumentDropBox&id=" .htmlentities($id). "' method='post'>";
+        $createExportForm.= "<table>";
+        $createExportForm.= "<tr>";
+        $createExportForm.= "<td><input type='text' name='documentToken' size='80' value ='". self::TESTTOKEN. "'/></td>";
+        $createExportForm.= "</tr>";
+        $createExportForm.= "<tr>";
+        $createExportForm.= "<td><input type='submit' value='Upload document'/></td>";
+        $createExportForm.= "</tr>";
+        $createExportForm.= "</table>";
+        $createExportForm.= '</form>';
+
+        $this->viewHeader->show();
+        echo $createExportForm;
+        $this->viewFooter->show();
+    }
+
+    /**
+     * View dropbox public url
+     * @param $url
+     */
+    function showUrl($url)
+    {
+        $showUrlForm = "<table>";
+        $showUrlForm.= "<tr>";
+        $showUrlForm.= "<td>File URL</td>";
+        $showUrlForm.= "</tr>";
+        $showUrlForm.= "<tr>";
+        $showUrlForm.= "<td>". $url . "</td>";
+        $showUrlForm.= "</tr>";
+        $showUrlForm.= "<tr>";
+        $showUrlForm.= "<td><br><a href='index.php?operation=readDocuments'>Go back to list documents</a></td>";
+        $showUrlForm.= "</tr>";
+        $showUrlForm.= "</table>";
+        $this->viewHeader->show();
+        echo $showUrlForm;
+        $this->viewFooter->show();
+    }
+
+    /**
+     * @param  array $documentData
+     * @return mixed
+     * @throws \Exception
+     */
+    function uploadExportFile($documentData)
     {
         $filename = $documentData['name'];
 
@@ -80,8 +140,8 @@ class ViewDocumentExport
         }
         fclose($fp);
 
-        $api_url = 'https://content.dropboxapi.com/2/files/upload'; //dropbox api url
-        $token   = $documentData['documentToken']; // oauth token
+        $api_url = 'https://content.dropboxapi.com/2/files/upload';
+        $token   = $documentData['documentToken'];
         $headers = array('Authorization: Bearer '. $token,
             'Content-Type: application/octet-stream',
             'Dropbox-API-Arg: '.
@@ -93,7 +153,6 @@ class ViewDocumentExport
                     "mute" => false
                 )
             )
-
         );
 
         $ch = curl_init($api_url);
@@ -107,32 +166,53 @@ class ViewDocumentExport
         curl_setopt($ch, CURLOPT_POSTFIELDS, fread($fp, $filesize));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $response  = curl_exec($ch);
+        $response  = json_decode(curl_exec($ch), true);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        //echo($response.'<br/>');
-        //echo($http_code.'<br/>');
         curl_close($ch);
 
         if ($http_code != '200') {
             throw new \Exception('There was a problem uploading the file to Dropbox.');
         }
-    }
-    
-    function showToken()
-    {
-        $id               = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
-        $createExportForm = "<form action='index.php?operation=exportDocumentDropBox' method='post'>";
-        $createExportForm.= "<table>";
-        $createExportForm.= "<tr>";
-        $createExportForm.= "<td><input type='text' name='documentToken' placeholder='Enter a DropBox token'/></td>";
-        $createExportForm.= "<input type='hidden' name='id' value='" . htmlentities($id) . "'>";
-        $createExportForm.= "<td><input type='submit' value='Upload document'> </input>";
-        $createExportForm.= "</tr>";
-        $createExportForm.= "</table>";
-        $createExportForm.= '</form>';
+        $documentName = $response['name'];
 
-        $this->viewHeader->show();
-        echo $createExportForm;
-        $this->viewFooter->show();
-    }     
+        return $documentName;
+    }
+
+    /**
+     * @param  string $documentName
+     * @param  string $documentToken
+     * @return mixed
+     * @throws \Exception
+     */
+    function getDropBoxUrl($documentName, $documentToken)
+    {
+        $api_url = 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings';
+        $token   = $documentToken;
+        $headers = array('Authorization: Bearer '. $token,
+            'Content-Type: application/json',
+        );
+        $data =
+        json_encode(
+            array(
+                "path"=> '/'. $documentName
+            )
+        );
+
+        $ch = curl_init($api_url);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        $response  = json_decode(curl_exec($ch), true);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code != '200') {
+            throw new \Exception('There was a problem uploading the file to Dropbox.');
+        }
+
+        return $response['url'];
+    }
 }
