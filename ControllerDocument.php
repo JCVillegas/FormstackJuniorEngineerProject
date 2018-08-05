@@ -48,7 +48,7 @@ class ControllerDocument
     }
 
     /**
-     *  @ View confirm message to delete document.
+     * View confirm message to delete document.
      */
     public function confirmDeleteDocument()
     {
@@ -103,34 +103,22 @@ class ControllerDocument
      */
     public function exportDocumentDropBox()
     {
+        $documentData = $this->model->getDocument($_GET);
 
-        if (empty($_POST['documentToken'])) {
-            $this->viewMessage->show('Token cannot be empty.');
+        if (!empty($documentData['url'])) {
+
+            $this->viewExport->showUrl($documentData['url']);
+        }
+        else if (!empty($_POST['documentToken'])) {
+
+            $documentData['documentToken'] = $_POST['documentToken'];
+            list($url, $id) = $this->viewExport->exportDocumentDropBox($documentData);
+            $this->model->saveDocumentUrl($id, $url);
         }
         else {
-            $documentData                  = $this->model->getDocument($_POST);
-            $documentData['documentToken'] = $_POST['documentToken'];
-
-            $message = '';
-
-            if ($documentData) {
-
-                try {
-                    $this->viewExport->exportDocumentDropBox($documentData);
-                } catch (\Exception $e) {
-                    $message = $e->getMessage();
-                }
-
-                if (empty($message)) {
-                    $this->viewMessage->show('The document has been uploaded.');
-                } else {
-                    $this->viewMessage->show('There was an error: '.$message);
-                }
-
-            } else {
-                $this->viewMessage->show('There was an error.');
-            }
+            $this->getToken();
         }
+
     }
 
     /**
