@@ -48,7 +48,7 @@ class ViewDocumentList
                 urlencode($value['id']).'">update</a></td>';
             $tableList .= '<td><a href="index.php?operation=exportDocument&id='.
                 urlencode($value['id']).'">download</a></td>';
-            $tableList .= '<td><a href="index.php?operation=getToken&id='.
+            $tableList .= '<td><a href="index.php?operation=exportDocumentDropBox&id='.
                 urlencode($value['id']).'">export to dropbox</a></td>';
             $tableList .= '<td><a href="index.php?operation=confirmDeleteDocument&id='.urlencode($value['id']).'">';
             $tableList .= 'delete document</a>';
