@@ -22,7 +22,7 @@ class ViewDocumentDelete
 
     /**
      * Shows Header, confirmation and footer
-     * @param  int $id
+     * @param  int  $id
      * @return void
      */
     public function show($id)
