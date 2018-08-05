@@ -11,6 +11,7 @@ class ModelDocument
 
     /**
      * Init DB
+     * @param $database
      */
     public function __construct($database)
     {
@@ -110,6 +111,28 @@ class ModelDocument
             $this->database->bind(':created', $documentData['created'], \PDO::PARAM_STR);
             $this->database->bind(':updated', date('Y-m-d H:i:s'), \PDO::PARAM_STR);
             $this->database->bind(':exported', $documentData['exported'], \PDO::PARAM_STR);
+
+            $result = $this->database->execute();
+            return $result;
+        }
+    }
+
+    /**
+     * Saves dropbox public URL after document is uploaded.
+     * @param  int    $id
+     * @param  string $url
+     * @return bool $result
+     */
+    public function saveDocumentUrl($id, $url)
+    {
+        $documentId  = !empty($id) ? (int) $id : 0;
+        $documentUrl = !empty($url) ? trim(substr($url, 0, 100)) : '';
+        if ($documentId == 0) {
+            return false;
+        } else {
+            $this->database->query('UPDATE '.DatabaseConfig::DB_TABLE.' SET url=:url WHERE id=:id');
+            $this->database->bind(':id', $documentId, \PDO::PARAM_INT);
+            $this->database->bind(':url',$documentUrl, \PDO::PARAM_STR);
 
             $result = $this->database->execute();
             return $result;
