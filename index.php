@@ -11,7 +11,7 @@ require_once 'ViewDocumentList.php';
 require_once 'ViewDocumentEdit.php';
 require_once 'ViewDocumentExport.php';
 require_once 'ViewDocumentMessage.php';
-require_once 'ViewDeleteDocument.php';
+require_once 'ViewDocumentDelete.php';
 
 $databaseConnection = new JCVillegas\JuniorProject\DatabaseConnection();
 $model              = new JCVillegas\JuniorProject\ModelDocument($databaseConnection);
