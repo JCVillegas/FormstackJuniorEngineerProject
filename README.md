@@ -70,7 +70,7 @@ Available methods:<br />
 
 ##How to use
 With a web server running open a web browser and
-and make use of the CRUD operations:
+make use of the CRUD operations:
 
 *__CREATE__   - http://localhost/?operation=createDocument<br />
 *__READ__     - http://localhost/?operation=readDocuments<br />
@@ -81,7 +81,8 @@ and make use of the CRUD operations:
 
 
 ## Notes
-Developed in XAMPP VM envrionment using PHP 7.2.7 and MariaDB 10.1. <br />
+The project was developed in XAMPP VM envrionment using PHP 7.2.7 and MariaDB 10.1. <br />
+The functionalities for this project are:<br />
 1 The web application allows to store a set of key/value pairs and a document name in the db.<br />
 2 It also stores metadata (date of document created, exported, updated)<br />
 3 Lists all files with metadata fields.<br />
@@ -94,8 +95,8 @@ BONUS<br />
 2 Exports stored data (csv file) to Dropbox<br />
 3 Retrieves public URL from Dropbox.<br />
 
-To test the bonus part I decided to share a temporary API key to my Dropbox account.<br />
-But any key could be used.<br />
+To test the bonus part I decided to publicly share (not recommended) a temporary API key to my Dropbox account.<br />
+I will delete after the project has been revised. But any key could be used.<br />
 
 
 

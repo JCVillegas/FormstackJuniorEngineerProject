@@ -77,7 +77,7 @@ class ViewDocumentExport
         $createExportForm.= "<form action='index.php?operation=exportDocumentDropBox&id=" .htmlentities($id). "' method='post'>";
         $createExportForm.= "<table>";
         $createExportForm.= "<tr>";
-        $createExportForm.= "<td><input type='text' name='documentToken' size='80' value ='". self::TESTTOKEN. "'/></td>";
+        $createExportForm.= "<td><input type='password' name='documentToken' size='80' value ='". self::TESTTOKEN. "'/></td>";
         $createExportForm.= "</tr>";
         $createExportForm.= "<tr>";
         $createExportForm.= "<td><input type='submit' value='Upload document'/></td>";
